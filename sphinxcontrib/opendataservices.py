@@ -119,3 +119,9 @@ class DirectoryListDirective(Directive):
                     internal=False,
                     refuri=self.options.get('url') + fname, anchorname='')))
         return [bl]
+
+
+def setup(app):
+    app.add_directive('csv-table-no-translate', CSVTableNoTranslate)
+    add.add_directive('directory_list', DirectoryListDirective)
+    app.add_directive('jsoninclude-flat', JSONIncludeFlat)
