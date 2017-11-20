@@ -1,5 +1,6 @@
 .ve
 *.egg-info
+__pycache__
 
 *~
 *.swp
