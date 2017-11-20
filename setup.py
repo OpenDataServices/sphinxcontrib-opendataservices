@@ -10,5 +10,6 @@ setup(
     install_requires=[
         'recommonmark',
         'jsonpointer',
+        'Sphinx',
     ]
 )
