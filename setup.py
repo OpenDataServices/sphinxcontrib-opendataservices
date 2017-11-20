@@ -11,5 +11,6 @@ setup(
         'recommonmark',
         'jsonpointer',
         'Sphinx',
-    ]
+    ],
+    namespace_packages=['sphinxcontrib'],
 )

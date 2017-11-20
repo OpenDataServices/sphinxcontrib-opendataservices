@@ -4,6 +4,9 @@ python:
   - "3.5"
 
 install: 
+  # pip master, and latest setuptools to fix https://github.com/pypa/pip/issues/4216
+  - "pip install -e git+https://github.com/pypa/pip.git@5a8b11cbe4b5e143e3ef6ebacfabe831b620f93b#egg=pip"
+  - "pip install --upgrade setuptools"
   - "pip install -e ."
   - "pip install flake8"
 
