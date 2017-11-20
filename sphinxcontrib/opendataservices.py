@@ -26,7 +26,7 @@ def flatten_dict(obj, path, result, recursive=False):
         for key, value in obj.items():
             if isinstance(value, dict):
                 if recursive:
-                    flatten_dict(value, path + '/' +key, result, recursive=recursive)
+                    flatten_dict(value, path + '/' + key, result, recursive=recursive)
             elif isinstance(value, list):
                 if isinstance(value[0], dict):
                     if recursive:
@@ -55,7 +55,6 @@ class JSONIncludeFlat(CSVTable):
         file_path = self.arguments[0]
         with open(file_path) as fp:
             json_obj = json.load(fp, object_pairs_hook=OrderedDict)
-        filename = str(file_path).split("/")[-1].replace(".json","")
         pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
         if(self.options.get('exclude')):
             for item in self.options['exclude'].split(","):
@@ -90,7 +89,6 @@ class JSONIncludeFlat(CSVTable):
             else:
                 csv_data.insert(0, result.keys())
 
-
         output = io.StringIO()
         output_csv = csv.writer(output)
         for line in csv_data:
@@ -115,13 +113,13 @@ class DirectoryListDirective(Directive):
         bl = nodes.bullet_list()
         for fname in os.listdir(self.options.get('path')):
             bl += nodes.list_item('', nodes.paragraph('', '', nodes.reference('', '',
-                    nodes.Text(fname),
-                    internal=False,
-                    refuri=self.options.get('url') + fname, anchorname='')))
+                nodes.Text(fname),
+                internal=False,
+                refuri=self.options.get('url') + fname, anchorname='')))
         return [bl]
 
 
 def setup(app):
     app.add_directive('csv-table-no-translate', CSVTableNoTranslate)
-    add.add_directive('directory_list', DirectoryListDirective)
+    app.add_directive('directory_list', DirectoryListDirective)
     app.add_directive('jsoninclude-flat', JSONIncludeFlat)
