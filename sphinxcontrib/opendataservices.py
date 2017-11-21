@@ -12,7 +12,6 @@ from recommonmark.parser import CommonMarkParser
 from sphinx.directives.code import LiteralInclude
 from docutils import nodes
 from docutils.utils import new_document
-from docutils.parsers.rst.roles import set_classes
 from docutils.parsers.rst import directives, Directive
 from docutils.parsers.rst.directives.tables import CSVTable
 
@@ -169,7 +168,7 @@ class DirectoryListDirective(Directive):
 
 def parse_markdown(text):
         parser = CommonMarkParser()
-        new_doc = new_document(None)#, self.document.settings)
+        new_doc = new_document(None)  # , self.document.settings)
         parser.parse(text, new_doc)
         return new_doc.children[:]
 
@@ -181,6 +180,7 @@ class MarkdownDirective(Directive):
         text = '\n'.join(self.content)
         print(text)
         return parse_markdown(text)
+
 
 class LiteralAndParsedMarkdownDirective(Directive):
     has_content = True
