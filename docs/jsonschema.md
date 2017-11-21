@@ -40,4 +40,14 @@ The core `jsonschema` directive is mainatined in another repository: [sphinxcont
             .. jsonschema-title-fieldname-map:: _static/example_schema.json
             ```
 
+.. rst:directive:: jsonschema-array
+        
+    Currently only used for OpenReferral.
+  
+        .. literal-and-parsed-markdown::
+            
+            ```eval_rst
+            .. jsonschema-array:: _static/example_schema_array.json
+            ```
+
 ````

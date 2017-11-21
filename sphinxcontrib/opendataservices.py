@@ -253,6 +253,25 @@ class JSONSchemaTitleFieldnameMapDirective(sphinxcontrib.jsonschema.JSONSchemaDi
         tbody += row
 
 
+class JSONSchemaArrayDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
+    headers = ['Name', 'Description', 'Type', 'Required']
+    widths = [1, 3, 1, 1]
+
+    def row(self, prop, tbody):
+        # Don't display rows for arrays and objects (only their children)
+        if isinstance(prop, (sphinxcontrib.jsonschema.Array, sphinxcontrib.jsonschema.Object)):
+            return
+        assert prop.name.startswith('/0/')
+        name = prop.name[3:]
+        name_cell = nodes.entry('', nodes.literal('', nodes.Text(name)))
+        row = nodes.row()
+        row += name_cell
+        row += self.cell(prop.description or '')
+        row += self.cell(type_format_simple(prop))
+        row += self.cell(prop.required)
+        tbody += row
+
+
 def setup(app):
     app.add_directive('csv-table-no-translate', CSVTableNoTranslate)
     app.add_directive('directory_list', DirectoryListDirective)
@@ -262,3 +281,4 @@ def setup(app):
     app.add_directive('literal-and-parsed-markdown', LiteralAndParsedMarkdownDirective)
     app.add_directive('jsonschema-titles', JSONSchemaTitlesDirective)
     app.add_directive('jsonschema-title-fieldname-map', JSONSchemaTitleFieldnameMapDirective)
+    app.add_directive('jsonschema-array', JSONSchemaArrayDirective)
