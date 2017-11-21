@@ -26,7 +26,7 @@ sphinxcontrib-opendataservices
                 Some markdown [a URL](http://example.org), `single backtick literals`. 
             ```
 
-    This is not so useful by tiself, but allows markdown to be embedded inside
+    This is not so useful by itself, but allows markdown to be embedded inside
     other directives, e.g.:
 
         .. literal-and-parsed-markdown::
