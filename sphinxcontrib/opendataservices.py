@@ -167,15 +167,27 @@ class DirectoryListDirective(Directive):
         return [bl]
 
 
+def parse_markdown(text):
+        parser = CommonMarkParser()
+        new_doc = new_document(None)#, self.document.settings)
+        parser.parse(text, new_doc)
+        return new_doc.children[:]
+
+
 class MarkdownDirective(Directive):
     has_content = True
 
     def run(self):
         text = '\n'.join(self.content)
-        parser = CommonMarkParser()
-        new_doc = new_document(None)#, self.document.settings)
-        parser.parse(text, new_doc)
-        return new_doc.children[:]
+        print(text)
+        return parse_markdown(text)
+
+class LiteralAndParsedMarkdownDirective(Directive):
+    has_content = True
+
+    def run(self):
+        text = '\n'.join(self.content)
+        return [nodes.literal_block(text, text, language='markdown')] + parse_markdown(text)
 
 
 def setup(app):
@@ -184,3 +196,4 @@ def setup(app):
     app.add_directive('jsoninclude', JSONInclude)
     app.add_directive('jsoninclude-flat', JSONIncludeFlat)
     app.add_directive('markdown', MarkdownDirective)
+    app.add_directive('literal-and-parsed-markdown', LiteralAndParsedMarkdownDirective)

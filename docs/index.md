@@ -1,7 +1,7 @@
 sphinxcontrib-opendataservices
 ==============================
 
-```eval_rst
+`````eval_rst
 
 .. rst:directive:: csv-table-no-translate
 
@@ -18,17 +18,27 @@ sphinxcontrib-opendataservices
     A directive that renders its contents as markdown, using Recommonmark.
 
 
-    .. markdown::
+    .. literal-and-parsed-markdown::
 
-        Some markdown [a URL](http://example.org), `single backtick literals`. 
+        ````eval_rst
+        .. markdown::
+
+            Some markdown [a URL](http://example.org), `single backtick literals`. 
+        ````
+
+    This is not so useful by tiself, but allows markdown to be embedded inside
+    other directives, e.g.:
+
+    .. literal-and-parsed-markdown::
 
         ```eval_rst
-        And even embedded ``eval_rst`` sections, if you need to use directives:
+        .. admonition:: Worked example
+            :class: hint
 
-        .. csv-table-no-translate::
+            .. markdown::
 
-            1,2,3
-            4,5,6
+                Some markdown [a URL](http://example.org), `single backtick literals`.
         ```
+`````
 
-```
+
