@@ -3,6 +3,10 @@ sphinxcontrib-opendataservices
 
 `````eval_rst
 
+.. toctree::
+    jsonschema
+
+
 .. rst:directive:: jsoninclude
 
     .. markdown::

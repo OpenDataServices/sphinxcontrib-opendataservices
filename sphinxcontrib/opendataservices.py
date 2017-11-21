@@ -7,6 +7,8 @@ from collections import OrderedDict
 
 from jsonpointer import resolve_pointer
 
+import sphinxcontrib.jsonschema
+
 from recommonmark.transform import AutoStructify
 from recommonmark.parser import CommonMarkParser
 from sphinx.directives.code import LiteralInclude
@@ -193,6 +195,64 @@ class LiteralAndParsedMarkdownDirective(Directive):
         ] + parse_markdown(text)
 
 
+def type_format_simple(prop):
+    prop_type = prop.attributes.get('type')
+    if prop.format:
+        return prop.format
+    elif isinstance(prop_type, list) and len(prop_type) == 2 and prop_type[1] == 'null':
+        return prop_type[0]
+    else:
+        return prop.type
+
+
+class JSONSchemaTitlesDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
+    headers = ['Title', 'Description', 'Type', 'Required']
+    widths = [1, 3, 1, 1]
+    option_spec = {
+        'child': directives.unchanged,
+    }
+    child = None
+
+    def make_nodes(self, schema):
+        child = self.options.get('child')
+        if child:
+            for prop in schema:
+                if prop.name == child:
+                    return [nodes.paragraph('', nodes.Text(prop.description)), self.table(prop)]
+            else:
+                raise KeyError
+        else:
+            return [self.table(schema)]
+    
+    def row(self, prop, tbody):
+        # Don't display rows for arrays and objects (only their children)
+        if isinstance(prop, (sphinxcontrib.jsonschema.Array, sphinxcontrib.jsonschema.Object)):
+            return
+        if not prop.rollup and prop.parent.parent.name != self.options.get('child'):
+            return
+        row = nodes.row()
+        row += self.cell(prop.full_title)
+        row += self.cell(prop.description or '')
+        row += self.cell(type_format_simple(prop))
+        row += self.cell(prop.required)
+        tbody += row
+
+
+class JSONSchemaTitleFieldnameMapDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
+    headers = ['Title', 'Name', 'Type']
+    widths = [1, 1, 1]
+    
+    def row(self, prop, tbody):
+        # Don't display rows for arrays and objects (only their children)
+        if isinstance(prop, (sphinxcontrib.jsonschema.Array, sphinxcontrib.jsonschema.Object)):
+            return
+        row = nodes.row()
+        row += self.cell(prop.full_title)
+        row += self.cell(prop.name)
+        row += self.cell(type_format_simple(prop))
+        tbody += row
+
+
 def setup(app):
     app.add_directive('csv-table-no-translate', CSVTableNoTranslate)
     app.add_directive('directory_list', DirectoryListDirective)
@@ -200,3 +260,5 @@ def setup(app):
     app.add_directive('jsoninclude-flat', JSONIncludeFlat)
     app.add_directive('markdown', MarkdownDirective)
     app.add_directive('literal-and-parsed-markdown', LiteralAndParsedMarkdownDirective)
+    app.add_directive('jsonschema-titles', JSONSchemaTitlesDirective)
+    app.add_directive('jsonschema-title-fieldname-map', JSONSchemaTitleFieldnameMapDirective)
