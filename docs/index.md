@@ -24,8 +24,8 @@ sphinxcontrib-opendataservices
 
     .. markdown::
 
-        Include a section of a JSON file, **flattened into a table representation table**, given a [jsonpointer](https://tools.ietf.org/html/rfc6901).
-
+        Include a section of a JSON file, **flattened into a table representation**, given a [jsonpointer](https://tools.ietf.org/html/rfc6901).
+        
         Examples, using [this json file](_static/example.json):
 
     ..
@@ -37,6 +37,16 @@ sphinxcontrib-opendataservices
                 :jsonpointer: /a/0/b
             ```
 
+    ``recursive`` (include nested dicts and lists):
+
+        .. literal-and-parsed-markdown::
+            
+            ```eval_rst
+            .. jsoninclude-flat:: _static/example.json
+                :jsonpointer: /a/0/b
+                :recursive:
+            ```
+
     List of items directly under the json pointer:
 
         .. literal-and-parsed-markdown::
@@ -44,6 +54,16 @@ sphinxcontrib-opendataservices
             ```eval_rst
             .. jsoninclude-flat:: _static/example.json
                 :jsonpointer: /g
+            ```
+
+    Remove part of the path from the headings uwsing ``ignore_path``:
+
+        .. literal-and-parsed-markdown::
+            
+            ```eval_rst
+            .. jsoninclude-flat:: _static/example.json
+                :jsonpointer: /a/0/b
+                :ignore_path: /a/0/b/
             ```
 
 .. rst:directive:: csv-table-no-translate

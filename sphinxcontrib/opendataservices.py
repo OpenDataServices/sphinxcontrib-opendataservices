@@ -33,9 +33,8 @@ def flatten_dict(obj, path, result, recursive=False):
             elif isinstance(value, list):
                 if isinstance(value[0], dict):
                     if recursive:
-                        print('aaaaa')
                         for num, sub_value in enumerate(value):
-                            flatten_dict(value, path + '/' + key + '/' + str(num), result, recursive=recursive)
+                            flatten_dict(sub_value, path + '/' + key + '/' + str(num), result, recursive=recursive)
                 else:
                     result[path + '/' + key] = ", ".join(value)
             else:
@@ -91,8 +90,8 @@ class JSONIncludeFlat(CSVTable):
         'jsonpointer': directives.unchanged,
         'title': directives.unchanged,
         'exclude': directives.unchanged,
-        'recursive': directives.flag,
         'include_only': directives.unchanged,
+        'recursive': directives.flag,
         'ignore_path': directives.unchanged,
     }
 
