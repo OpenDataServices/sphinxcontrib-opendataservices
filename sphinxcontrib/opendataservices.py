@@ -33,6 +33,7 @@ def flatten_dict(obj, path, result, recursive=False):
             elif isinstance(value, list):
                 if isinstance(value[0], dict):
                     if recursive:
+                        print('aaaaa')
                         for num, sub_value in enumerate(value):
                             flatten_dict(value, path + '/' + key + '/' + str(num), result, recursive=recursive)
                 else:
@@ -178,7 +179,6 @@ class MarkdownDirective(Directive):
 
     def run(self):
         text = '\n'.join(self.content)
-        print(text)
         return parse_markdown(text)
 
 
