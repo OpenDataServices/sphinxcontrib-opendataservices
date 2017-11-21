@@ -18,27 +18,27 @@ sphinxcontrib-opendataservices
     A directive that renders its contents as markdown, using Recommonmark.
 
 
-    .. literal-and-parsed-markdown::
+        .. literal-and-parsed-markdown::
 
-        ````eval_rst
-        .. markdown::
+            ```eval_rst
+            .. markdown::
 
-            Some markdown [a URL](http://example.org), `single backtick literals`. 
-        ````
+                Some markdown [a URL](http://example.org), `single backtick literals`. 
+            ```
 
     This is not so useful by tiself, but allows markdown to be embedded inside
     other directives, e.g.:
 
-    .. literal-and-parsed-markdown::
+        .. literal-and-parsed-markdown::
 
-        ```eval_rst
-        .. admonition:: Worked example
-            :class: hint
+            ```eval_rst
+            .. admonition:: Worked example
+                :class: hint
 
-            .. markdown::
+                .. markdown::
 
-                Some markdown [a URL](http://example.org), `single backtick literals`.
-        ```
+                    Some markdown [a URL](http://example.org), `single backtick literals`.
+            ```
 `````
 
 

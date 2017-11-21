@@ -187,7 +187,11 @@ class LiteralAndParsedMarkdownDirective(Directive):
 
     def run(self):
         text = '\n'.join(self.content)
-        return [nodes.literal_block(text, text, language='markdown')] + parse_markdown(text)
+        return [
+            nodes.paragraph('', '', nodes.Text('Source:')),
+            nodes.literal_block(text, text),
+            nodes.paragraph('', '', nodes.Text('Output:')),
+        ] + parse_markdown(text)
 
 
 def setup(app):
