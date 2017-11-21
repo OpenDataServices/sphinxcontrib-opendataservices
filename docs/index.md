@@ -128,6 +128,20 @@ sphinxcontrib-opendataservices
 
 .. rst:directive:: directory_list
 
+    Return a bullet list for files in a directory.
+
+    `path` is the path of the directory.
+    `url` is a url prefix to form the links
+
+    Example:
+
+        .. literal-and-parsed-markdown::
+
+            ```eval_rst
+            .. directory_list::
+                :path: exampledir
+                :url: https://github.com/OpenDataServices/sphinxcontrib-opendataservices/blob/master/docs/exampledir/
+            ```
 `````
 
 
