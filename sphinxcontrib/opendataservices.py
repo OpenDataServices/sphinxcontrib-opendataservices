@@ -7,9 +7,12 @@ from collections import OrderedDict
 
 from jsonpointer import resolve_pointer
 
-from docutils import nodes
 from recommonmark.transform import AutoStructify
+from recommonmark.parser import CommonMarkParser
 from sphinx.directives.code import LiteralInclude
+from docutils import nodes
+from docutils.utils import new_document
+from docutils.parsers.rst.roles import set_classes
 from docutils.parsers.rst import directives, Directive
 from docutils.parsers.rst.directives.tables import CSVTable
 
@@ -164,8 +167,20 @@ class DirectoryListDirective(Directive):
         return [bl]
 
 
+class MarkdownDirective(Directive):
+    has_content = True
+
+    def run(self):
+        text = '\n'.join(self.content)
+        parser = CommonMarkParser()
+        new_doc = new_document(None)#, self.document.settings)
+        parser.parse(text, new_doc)
+        return new_doc.children[:]
+
+
 def setup(app):
     app.add_directive('csv-table-no-translate', CSVTableNoTranslate)
     app.add_directive('directory_list', DirectoryListDirective)
     app.add_directive('jsoninclude', JSONInclude)
     app.add_directive('jsoninclude-flat', JSONIncludeFlat)
+    app.add_directive('markdown', MarkdownDirective)
