@@ -20,6 +20,26 @@ sphinxcontrib-opendataservices
                 :jsonpointer: /a/0/b
             ```
 
+    ``exclude`` option:
+
+        .. literal-and-parsed-markdown::
+            
+            ```eval_rst
+            .. jsoninclude:: _static/example.json
+                :jsonpointer: /a/0/b
+                :exclude: e,g
+            ```
+
+    ``include_only`` option:
+
+        .. literal-and-parsed-markdown::
+            
+            ```eval_rst
+            .. jsoninclude:: _static/example.json
+                :jsonpointer: /a/0/b
+                :include_only: e,g
+            ```
+
 .. rst:directive:: jsoninclude-flat
 
     .. markdown::
@@ -53,7 +73,7 @@ sphinxcontrib-opendataservices
 
             ```eval_rst
             .. jsoninclude-flat:: _static/example.json
-                :jsonpointer: /g
+                :jsonpointer: /h
             ```
 
     Remove part of the path from the headings uwsing ``ignore_path``:
@@ -65,6 +85,9 @@ sphinxcontrib-opendataservices
                 :jsonpointer: /a/0/b
                 :ignore_path: /a/0/b/
             ```
+
+    `jsoninclude-flat` also has the options `exclude` and `include_only`, the
+    same as for `jsoninclude` (see above).
 
 .. rst:directive:: csv-table-no-translate
 
