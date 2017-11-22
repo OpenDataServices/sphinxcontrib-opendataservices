@@ -43,8 +43,9 @@
 
     Return a bullet list for files in a directory.
 
-    `path` is the path of the directory.
-    `url` is a url prefix to form the links
+    | ``path`` is the path of the directory.
+    | ``url`` is a url prefix to form the links
+    |
 
     Example:
 

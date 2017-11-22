@@ -85,7 +85,7 @@
                 :ignore_path: /a/0/b/
             ```
 
-    `jsoninclude-flat` also has the options `exclude` and `include_only`, the
-    same as for `jsoninclude` (see above).
+    ``jsoninclude-flat`` also has the options ``exclude`` and ``include_only``, the
+    same as for ``jsoninclude`` (see above).
 
 `````
