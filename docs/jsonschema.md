@@ -62,4 +62,8 @@
             .. jsonschema-array:: _static/example_schema_array.json
             ```
 
-````
+`````
+
+## CSS
+
+To display the tables better, add this css to your site: [jsonschema.css](https://github.com/OpenDataServices/sphinxcontrib-opendataservices/blob/master/docs/_static/jsonschema.css).
