@@ -3,7 +3,7 @@ jsonpointer==1.14
 Sphinx==1.6.5
 sphinx-rtd-theme==0.2.4
 # recommonmark commit pinned from master branch
-recommonmark==0.4.0
+-e git+https://github.com/rtfd/recommonmark.git@81d7c6f7b37981ac22571dd91a7cc9d24c3e66a1#egg=recommonmark
 -e git+https://github.com/OpenDataServices/sphinxcontrib-jsonschema.git@964e709dcdde1b3a2d145a81a03f1c30b698d0b7#egg=sphinxcontrib_jsonschema
 -e .
 
