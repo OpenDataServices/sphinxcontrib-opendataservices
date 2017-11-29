@@ -63,6 +63,25 @@ You need to add the files to a `_static` folder within your docs, and then add t
 {% set script_files = script_files + ["_static/renderjson.js", "_static/json-example-format.js"] %}
 ```
 
+The option `expand` can be used to control which lists are expanded initially. The option `title` can be used to give the json include a title; only one of consecutive includes will be shown, with a select box to switch:
+
+`````eval_rst
+
+.. literal-and-parsed-markdown::
+
+    ```eval_rst
+    .. jsoninclude:: _static/example.json
+        :jsonpointer: 
+        :title: collapsed
+
+    .. jsoninclude:: _static/example.json
+        :jsonpointer: 
+        :expand: a,b,e,h
+        :title: expanded
+    ```
+
+`````
+
 ## Flat JSON Include
 
 `````eval_rst
