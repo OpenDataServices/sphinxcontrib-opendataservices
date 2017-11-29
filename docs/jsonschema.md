@@ -66,4 +66,9 @@
 
 ## CSS
 
-To display the tables better, add this css to your site: [jsonschema.css](https://github.com/OpenDataServices/sphinxcontrib-opendataservices/blob/master/docs/_static/jsonschema.css).
+To display the tables better, add this css to your site: [jsonschema.css](https://github.com/OpenDataServices/sphinxcontrib-opendataservices/blob/master/docs/_static/jsonschema.css). You need to add the file to a `_static` folder within your docs, and then add the following to `_templates/layout.html`.
+
+```
+{% extends "!layout.html" %}
+{% set css_files = css_files + ["_static/jsonschema.css"] %}
+```

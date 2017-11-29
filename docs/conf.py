@@ -51,10 +51,6 @@ pygments_style = 'sphinx'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_context = {
-    'extra_css_files': ['_static/jsonschema.css']
-}
-
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'OCDSdoc'
 
