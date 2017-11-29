@@ -57,3 +57,8 @@
                 :url: https://github.com/OpenDataServices/sphinxcontrib-opendataservices/blob/master/docs/exampledir/
             ```
 `````
+
+## Directives in other repositories 
+
+* [ocds_sphinx_directives](https://github.com/open-contracting/ocds_sphinx_directives) contains extensions that are specific to OCDS docs sites. Currently they all relate to extensions.
+* [OpenReferral's JSON Table Schema include](https://github.com/openreferral/specification/blob/master/docs/conf.py#L381), because this is the only docs site we maintain that uses JSON Table Schema.
