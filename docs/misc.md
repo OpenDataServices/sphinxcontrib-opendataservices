@@ -56,6 +56,21 @@
                 :path: exampledir
                 :url: https://github.com/OpenDataServices/sphinxcontrib-opendataservices/blob/master/docs/exampledir/
             ```
+
+.. rst:directive:: localization-note
+   
+   Create a note admonition that only will appear in languages that have "translated" it. This will not appear in the base language (normally English). If a translator wants to mark they have seen the message but do not want to add a note then they can leave a single hyphen '-'. The contents of the translation will be treated as markdown. The text within the directive should contain information useful for the translator and instruct what to do when they encouter this. For example::
+
+    ```eval_rst
+    .. localization-note:: 
+
+      DO NOT TRANSLATE THIS MESSAGE DIRECTLY
+
+      Instead put some language specific context as to how to interpret this page.
+      
+      Put a '-' if you do not want this note to appear in this language. 
+    ```
+
 `````
 
 ## Directives in other repositories 

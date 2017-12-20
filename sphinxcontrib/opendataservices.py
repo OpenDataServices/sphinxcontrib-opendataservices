@@ -12,10 +12,14 @@ import sphinxcontrib.jsonschema
 from recommonmark.transform import AutoStructify
 from recommonmark.parser import CommonMarkParser
 from sphinx.directives.code import LiteralInclude
+from sphinx import addnodes
 from docutils import nodes
 from docutils.utils import new_document
 from docutils.parsers.rst import directives, Directive
 from docutils.parsers.rst.directives.tables import CSVTable
+from docutils.parsers.rst.directives.admonitions import Note
+from docutils.parsers.rst.roles import set_classes
+from docutils.transforms import Transform
 
 
 class AutoStructifyLowPriority(AutoStructify):
@@ -272,6 +276,62 @@ class JSONSchemaArrayDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
         tbody += row
 
 
+class note(nodes.note, addnodes.translatable):
+    ''' Named note as it needs to be a name that the sphinx builders know '''
+
+    def preserve_original_messages(self):
+        self['orginal_text'] = self.rawsource
+
+    def apply_translated_message(self, original_message, translated_message):
+        self.attributes['translation-found'] = True
+        if translated_message.strip() == '-':
+            self.attributes['ignore-note'] = True
+        else:
+            self.children = parse_markdown(translated_message)
+
+    def extract_original_messages(self):
+        return [self['orginal_text']]
+
+
+class LocalizationNote(Note):
+
+    def run(self):
+        set_classes(self.options)
+        self.assert_has_content()
+        text = '\n'.join(self.content)
+        self.options['localization_note'] = True
+        admonition_node = note(text, **self.options)
+        self.add_name(admonition_node)
+        admonition_node.source, admonition_node.line = self.state.state_machine.get_source_and_line()
+        #self.state.nested_parse(self.content, self.content_offset,
+        #                        admonition_node)
+        admonition_node.children = parse_markdown(text)
+        return [admonition_node]
+
+
+class RemoveLocalizationNote(Transform):
+    """
+    Remove localization note with a '-'.
+    """
+    default_priority = 21
+
+    def apply(self):
+        from sphinx.builders.gettext import MessageCatalogBuilder
+        env = self.document.settings.env
+        builder = env.app.builder
+        if isinstance(builder, MessageCatalogBuilder):
+            return
+        for note in self.document.traverse(nodes.note):
+            if 'localization_note' not in note.attributes:
+                continue
+            if (
+                'ignore-note' in note.attributes or
+                'translation-found' not in note.attributes or
+                not env.config.language
+            ):
+                note.parent.remove(note)
+
+
 def setup(app):
     app.add_directive('csv-table-no-translate', CSVTableNoTranslate)
     app.add_directive('directory_list', DirectoryListDirective)
@@ -282,3 +342,6 @@ def setup(app):
     app.add_directive('jsonschema-titles', JSONSchemaTitlesDirective)
     app.add_directive('jsonschema-title-fieldname-map', JSONSchemaTitleFieldnameMapDirective)
     app.add_directive('jsonschema-array', JSONSchemaArrayDirective)
+    app.add_directive('localization-note', LocalizationNote)
+
+    app.add_transform(RemoveLocalizationNote)
