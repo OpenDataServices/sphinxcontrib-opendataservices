@@ -258,18 +258,24 @@ class JSONSchemaTitleFieldnameMapDirective(sphinxcontrib.jsonschema.JSONSchemaDi
 
 
 class JSONSchemaArrayDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
-    headers = ['Name', 'Description', 'Type', 'Required']
-    widths = [1, 3, 1, 1]
+    headers = ['', 'Description', 'Type', 'Required']
+    widths = [1, 10, 2, 2]
 
     def row(self, prop, tbody):
         # Don't display rows for arrays and objects (only their children)
         if isinstance(prop, (sphinxcontrib.jsonschema.Array, sphinxcontrib.jsonschema.Object)):
             return
+
         assert prop.name.startswith('/0/')
         name = prop.name[3:]
-        name_cell = nodes.entry('', nodes.literal('', nodes.Text(name)))
+        name_cell = nodes.entry('', nodes.literal('', nodes.Text(name)), morecols=3)
+
         row = nodes.row()
         row += name_cell
+        tbody += row
+
+        row = nodes.row()
+        row += self.cell('')
         row += self.cell(prop.description or '')
         row += self.cell(type_format_simple(prop))
         row += self.cell(prop.required)
