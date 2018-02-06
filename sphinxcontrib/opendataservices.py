@@ -57,7 +57,15 @@ class JSONInclude(LiteralInclude):
     }
 
     def run(self):
-        with open(self.arguments[0]) as fp:
+        env = self.state.document.settings.env
+        dirname = os.path.dirname(env.doc2path(env.docname, base=None))
+        relpath = os.path.join(dirname, self.arguments[0])
+        abspath = os.path.join(env.srcdir, relpath)
+        if not os.access(abspath, os.R_OK):
+            raise self.warning('JSON file not readable: %s' %
+                               self.arguments[0])
+
+        with open(abspath) as fp:
             json_obj = json.load(fp, object_pairs_hook=OrderedDict)
         filename = str(self.arguments[0]).split("/")[-1].replace(".json", "")
         try:
@@ -105,8 +113,15 @@ class JSONIncludeFlat(CSVTable):
         return None, []
 
     def get_csv_data(self):
-        file_path = self.arguments[0]
-        with open(file_path) as fp:
+        env = self.state.document.settings.env
+        dirname = os.path.dirname(env.doc2path(env.docname, base=None))
+        relpath = os.path.join(dirname, self.arguments[0])
+        abspath = os.path.join(env.srcdir, relpath)
+        if not os.access(abspath, os.R_OK):
+            raise self.warning('JSON file not readable: %s' %
+                               self.arguments[0])
+
+        with open(abspath) as fp:
             json_obj = json.load(fp, object_pairs_hook=OrderedDict)
         pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
         if(self.options.get('exclude')):
@@ -147,7 +162,7 @@ class JSONIncludeFlat(CSVTable):
         for line in csv_data:
             output_csv.writerow(line)
         self.options['header-rows'] = 1
-        return output.getvalue().splitlines(), file_path
+        return output.getvalue().splitlines(), abspath
 
 
 class CSVTableNoTranslate(CSVTable):
