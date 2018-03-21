@@ -5,6 +5,7 @@ import glob
 import io
 import json
 import os
+from io import StringIO
 from collections import OrderedDict
 
 from jsonpointer import resolve_pointer
@@ -353,6 +354,44 @@ class RemoveLocalizationNote(Transform):
                 not env.config.language
             ):
                 note.parent.remove(note)
+
+
+def codelists_extract(fileobj, keywords, comment_tags, options):
+    """
+    Yields each header, and the Title, Description and Extension values of a codelist CSV file.
+
+    Babel extractor used in setup.py
+    """
+    reader = csv.DictReader(StringIO(fileobj.read().decode()))
+    for header in reader.fieldnames:
+        yield 0, '', header.strip(), ''
+
+    if os.path.basename(fileobj.name) != 'currency.csv':
+        for row_number, row in enumerate(reader, 1):
+            for key, value in row.items():
+                if key in ('Title', 'Description', 'Extension') and value:
+                    yield row_number, '', value.strip(), [key]
+
+
+def jsonschema_extract(fileobj, keywords, comment_tags, options):
+    """
+    Yields the "title" and "description" values of a JSON Schema file.
+
+    Babel extractor used in setup.py
+    """
+    def gather_text(data, pointer=''):
+        if isinstance(data, list):
+            for index, item in enumerate(data):
+                yield from gather_text(item, pointer='{}/{}'.format(pointer, index))
+        elif isinstance(data, dict):
+            for key, value in data.items():
+                if key in ('title', 'description') and isinstance(value, str):
+                    yield value, '{}/{}'.format(pointer, key)
+                yield from gather_text(value, pointer='{}/{}'.format(pointer, key))
+
+    data = json.loads(fileobj.read().decode())
+    for text, pointer in gather_text(data):
+        yield 1, '', text.strip(), [pointer]
 
 
 def translate_codelists(domain, sourcedir, builddir, localedir, language):
