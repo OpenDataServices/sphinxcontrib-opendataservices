@@ -244,8 +244,10 @@ class JSONSchemaTitlesDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
             return [self.table(schema)]
     
     def row(self, prop, tbody):
-        # Don't display rows for arrays and objects (only their children)
-        if isinstance(prop, (sphinxcontrib.jsonschema.Array, sphinxcontrib.jsonschema.Object)):
+        # Don't display rows for objects and arrays of objects (only their children)
+        if (isinstance(prop, sphinxcontrib.jsonschema.Object) or
+            (isinstance(prop, sphinxcontrib.jsonschema.Array) and
+                prop.items.get('type') == 'object')):
             return
         if not prop.rollup and prop.parent.parent.name != self.options.get('child'):
             return
@@ -262,8 +264,10 @@ class JSONSchemaTitleFieldnameMapDirective(sphinxcontrib.jsonschema.JSONSchemaDi
     widths = [1, 1, 1]
     
     def row(self, prop, tbody):
-        # Don't display rows for arrays and objects (only their children)
-        if isinstance(prop, (sphinxcontrib.jsonschema.Array, sphinxcontrib.jsonschema.Object)):
+        # Don't display rows for objects and arrays of objects (only their children)
+        if (isinstance(prop, sphinxcontrib.jsonschema.Object) or
+            (isinstance(prop, sphinxcontrib.jsonschema.Array) and
+                prop.items.get('type') == 'object')):
             return
         row = nodes.row()
         row += self.cell(prop.full_title)
