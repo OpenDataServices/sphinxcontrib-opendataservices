@@ -305,7 +305,7 @@ class note(nodes.note, addnodes.translatable):
     ''' Named note as it needs to be a name that the sphinx builders know '''
 
     def preserve_original_messages(self):
-        self['orginal_text'] = self.rawsource
+        self['original_text'] = self.rawsource
 
     def apply_translated_message(self, original_message, translated_message):
         self.attributes['translation-found'] = True
@@ -315,7 +315,7 @@ class note(nodes.note, addnodes.translatable):
             self.children = parse_markdown(translated_message)
 
     def extract_original_messages(self):
-        return [self['orginal_text']]
+        return [self['original_text']]
 
 
 class LocalizationNote(Note):
