@@ -100,14 +100,13 @@ class JSONInclude(LiteralInclude):
 
 
 class JSONIncludeFlat(CSVTable):
-    option_spec = {
-        'jsonpointer': directives.unchanged,
-        'title': directives.unchanged,
-        'exclude': directives.unchanged,
-        'include_only': directives.unchanged,
-        'recursive': directives.flag,
-        'ignore_path': directives.unchanged,
-    }
+    option_spec = CSVTable.option_spec.copy()
+    option_spec['jsonpointer'] = directives.unchanged
+    option_spec['title'] = directives.unchanged
+    option_spec['exclude'] = directives.unchanged
+    option_spec['include_only'] = directives.unchanged
+    option_spec['recursive'] = directives.flag
+    option_spec['ignore_path'] = directives.unchanged
 
     def make_title(self):
         return None, []
