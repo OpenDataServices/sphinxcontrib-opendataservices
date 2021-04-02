@@ -11,6 +11,8 @@
         but the text inside the table is not translated. Useful when
         translation is handled by an external process, e.g. codelists.
 
+    | ``included_cols`` is the optional list of indices of columns to include.
+    |
 
 .. rst:directive:: markdown
 

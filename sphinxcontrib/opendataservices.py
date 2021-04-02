@@ -9,6 +9,7 @@ from jsonpointer import resolve_pointer
 
 import sphinxcontrib.jsonschema
 
+from docutils.utils import SystemMessagePropagation
 from recommonmark.transform import AutoStructify
 from recommonmark.parser import CommonMarkParser
 from sphinx.directives.code import LiteralInclude
@@ -20,6 +21,22 @@ from docutils.parsers.rst.directives.tables import CSVTable
 from docutils.parsers.rst.directives.admonitions import Note
 from docutils.parsers.rst.roles import set_classes
 from docutils.transforms import Transform
+
+
+# Based on positive_int_list from docutils
+def nonnegative_int_list(argument):
+    """
+    Converts a space- or comma-separated list of values into a Python list
+    of integers.
+    (Directive option conversion function.)
+
+    Raises ValueError for non-positive-integer values.
+    """
+    if ',' in argument:
+        entries = argument.split(',')
+    else:
+        entries = argument.split()
+    return [directives.nonnegative_int(entry) for entry in entries]
 
 
 class AutoStructifyLowPriority(AutoStructify):
@@ -165,6 +182,26 @@ class JSONIncludeFlat(CSVTable):
 
 
 class CSVTableNoTranslate(CSVTable):
+    option_spec = CSVTable.option_spec.copy()
+    option_spec['included_cols'] = nonnegative_int_list
+
+    def parse_csv_data_into_rows(self, csv_data, dialect, source):
+        rows, max_cols = super().parse_csv_data_into_rows(csv_data, dialect, source)
+        if 'included_cols' not in self.options:
+            return rows, max_cols
+
+        new_rows = []
+        for row in rows:
+            try:
+                new_rows.append([row[i] for i in self.options['included_cols']])
+            except IndexError:
+                error = self.state_machine.reporter.error(
+                    'One or more indexes of included_cols are not valid. '
+                    'The CSV data does not contain that many columns.')
+                raise SystemMessagePropagation(error)
+
+        return new_rows, len(self.options['included_cols'])
+
     def get_csv_data(self):
         lines, source = super().get_csv_data()
         return lines, None
