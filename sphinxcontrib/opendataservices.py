@@ -11,16 +11,15 @@ import sphinxcontrib.jsonschema
 
 from docutils.utils import SystemMessagePropagation
 from recommonmark.transform import AutoStructify
-from recommonmark.parser import CommonMarkParser
 from sphinx.directives.code import LiteralInclude
 from sphinx import addnodes
 from docutils import nodes
-from docutils.utils import new_document
 from docutils.parsers.rst import directives, Directive
 from docutils.parsers.rst.directives.tables import CSVTable
 from docutils.parsers.rst.directives.admonitions import Note
 from docutils.parsers.rst.roles import set_classes
 from docutils.transforms import Transform
+from myst_parser.main import to_docutils
 
 
 # Based on positive_int_list from docutils
@@ -224,10 +223,7 @@ class DirectoryListDirective(Directive):
 
 
 def parse_markdown(text):
-        parser = CommonMarkParser()
-        new_doc = new_document(None)  # , self.document.settings)
-        parser.parse(text, new_doc)
-        return new_doc.children[:]
+        return to_docutils(text).children[:]
 
 
 class MarkdownDirective(Directive):

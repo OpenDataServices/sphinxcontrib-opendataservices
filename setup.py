@@ -10,6 +10,7 @@ setup(
     install_requires=[
         'recommonmark',
         'jsonpointer',
+        'myst-parser',
         'Sphinx',
     ],
     namespace_packages=['sphinxcontrib'],
