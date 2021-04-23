@@ -50,3 +50,9 @@ def test_csv_table_no_translate_html(app, status, warning):
 @pytest.mark.sphinx(buildername='gettext', srcdir=path('csv-table-no-translate'), freshenv=True)
 def test_csv_table_no_translate_gettext(app, status, warning):
     assert_build(app, status, warning, 'csv-table-no-translate', buildername='gettext')
+
+
+@pytest.mark.sphinx(buildername='gettext', srcdir=path('csv-table-no-translate-md'), freshenv=True,
+                    confoverrides={'extensions': ['myst_parser', 'sphinxcontrib.opendataservices']})
+def test_csv_table_no_translate_gettext_myst(app, status, warning):
+    assert_build(app, status, warning, 'csv-table-no-translate-md', buildername='gettext')

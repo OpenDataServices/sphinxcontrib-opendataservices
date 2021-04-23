@@ -20,6 +20,7 @@ setup(
             'flake8',
             'isort',
             'lxml',
+            'myst-parser',
             'pytest',
             'pytest-cov',
         ],

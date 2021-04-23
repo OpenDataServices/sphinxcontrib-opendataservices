@@ -200,9 +200,20 @@ class CSVTableNoTranslate(CSVTable):
 
         return new_rows, len(self.options['included_cols'])
 
-    def get_csv_data(self):
-        lines, source = super().get_csv_data()
-        return lines, None
+    def run(self):
+        returned = super().run()
+
+        # docutils.parsers.rst.directives.tables.CSVTable.run() returns the nodes.table() node as the first node.
+        table_node = returned[0]
+
+        def is_text_element(node):
+            return isinstance(node, nodes.TextElement)
+
+        # sphinx.util.nodes.is_translatable() returns True for TextElement nodes unless node['translatable'] is False.
+        for node in table_node.traverse(is_text_element):
+            node['translatable'] = False
+
+        return returned
 
 
 class DirectoryListDirective(Directive):
