@@ -87,7 +87,7 @@ class JSONInclude(LiteralInclude):
         filename = str(self.arguments[0]).split("/")[-1].replace(".json", "")
         try:
             title = self.options['title']
-        except KeyError as e:
+        except KeyError:
             title = filename
         pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
         # Remove the items mentioned in exclude
@@ -95,7 +95,7 @@ class JSONInclude(LiteralInclude):
             for item in self.options['exclude'].split(","):
                 try:
                     del pointed[item.strip()]
-                except KeyError as e:
+                except KeyError:
                     pass
 
         if(self.options.get('include_only')):
@@ -104,7 +104,8 @@ class JSONInclude(LiteralInclude):
                     del pointed[node]
 
         code = json.dumps(pointed, indent='    ')
-        # Ideally we would add the below to a data-expand element, but I can't see how to do this, so using classes for now...
+        # Ideally we would add the below to a data-expand element, but I can't see how to do this,
+        # so using classes for now...
         class_list = self.options.get('class', [])
         class_list.append('file-' + title)
         expand = str(self.options.get("expand", "")).split(",")
@@ -144,7 +145,7 @@ class JSONIncludeFlat(CSVTable):
             for item in self.options['exclude'].split(","):
                 try:
                     del pointed[item.strip()]
-                except KeyError as e:
+                except KeyError:
                     pass
         if(self.options.get('include_only')):
             for node in list(pointed):
@@ -217,17 +218,17 @@ class DirectoryListDirective(Directive):
         bl = nodes.bullet_list()
         for fname in os.listdir(self.options.get('path')):
             bl += nodes.list_item('', nodes.paragraph('', '', nodes.reference('', '',
-                nodes.Text(fname),
-                internal=False,
-                refuri=self.options.get('url') + fname, anchorname='')))
+                                  nodes.Text(fname),
+                                  internal=False,
+                                  refuri=self.options.get('url') + fname, anchorname='')))
         return [bl]
 
 
 def parse_markdown(text):
-        parser = CommonMarkParser()
-        new_doc = new_document(None)  # , self.document.settings)
-        parser.parse(text, new_doc)
-        return new_doc.children[:]
+    parser = CommonMarkParser()
+    new_doc = new_document(None)  # , self.document.settings)
+    parser.parse(text, new_doc)
+    return new_doc.children[:]
 
 
 class MarkdownDirective(Directive):
@@ -278,12 +279,13 @@ class JSONSchemaTitlesDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
                 raise KeyError
         else:
             return [self.table(schema)]
-    
+
     def row(self, prop, tbody):
         # Don't display rows for objects and arrays of objects (only their children)
-        if (isinstance(prop, sphinxcontrib.jsonschema.Object) or
-            (isinstance(prop, sphinxcontrib.jsonschema.Array) and
-                prop.items.get('type') == 'object')):
+        if (
+            isinstance(prop, sphinxcontrib.jsonschema.Object)
+            or (isinstance(prop, sphinxcontrib.jsonschema.Array) and prop.items.get('type') == 'object')
+        ):
             return
         if not prop.rollup and prop.parent.parent.name != self.options.get('child'):
             return
@@ -298,7 +300,7 @@ class JSONSchemaTitlesDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
 class JSONSchemaTitleFieldnameMapDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
     headers = ['Title', 'Name', 'Type']
     widths = [1, 1, 1]
-    
+
     def row(self, prop, tbody):
         # Don't display rows for objects and arrays of objects (only their children)
         if (isinstance(prop, sphinxcontrib.jsonschema.Object) or
@@ -364,8 +366,8 @@ class LocalizationNote(Note):
         admonition_node = note(text, **self.options)
         self.add_name(admonition_node)
         admonition_node.source, admonition_node.line = self.state.state_machine.get_source_and_line()
-        #self.state.nested_parse(self.content, self.content_offset,
-        #                        admonition_node)
+        # self.state.nested_parse(self.content, self.content_offset,
+        #                         admonition_node)
         admonition_node.children = parse_markdown(text)
         return [admonition_node]
 
