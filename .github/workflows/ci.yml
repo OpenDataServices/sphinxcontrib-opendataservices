@@ -23,6 +23,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       - run: pip install .[test]
+      # Remove after sphinxcontrib-opendataservices-jsonschema > 0.1.0 is released.
+      - run: pip install six
       - run: pytest -vv --cov sphinxcontrib
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
