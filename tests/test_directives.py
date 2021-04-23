@@ -55,3 +55,18 @@ def test_csv_table_no_translate_gettext(app, status, warning):
 @pytest.mark.sphinx(buildername='gettext', srcdir=path('csv-table-no-translate-md'), freshenv=True)
 def test_csv_table_no_translate_gettext_myst(app, status, warning):
     assert_build(app, status, warning, 'csv-table-no-translate-md', buildername='gettext')
+
+
+@pytest.mark.sphinx(buildername='html', srcdir=path('jsoninclude-flat'), freshenv=True)
+def test_jsoninclude_flat_html(app, status, warning):
+    assert_build(app, status, warning, 'jsoninclude-flat')
+
+
+@pytest.mark.sphinx(buildername='gettext', srcdir=path('jsoninclude-flat'), freshenv=True)
+def test_jsoninclude_flat_gettext(app, status, warning):
+    assert_build(app, status, warning, 'jsoninclude-flat', buildername='gettext')
+
+
+@pytest.mark.sphinx(buildername='gettext', srcdir=path('jsoninclude-flat-md'), freshenv=True)
+def test_jsoninclude_flat_gettext_myst(app, status, warning):
+    assert_build(app, status, warning, 'jsoninclude-flat-md', buildername='gettext')
