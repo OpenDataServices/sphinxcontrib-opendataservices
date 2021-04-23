@@ -8,9 +8,22 @@ setup(
     packages=['sphinxcontrib'],
     url='https://github.com/OpenDataServices/sphinxcontrib-opendataservices',
     install_requires=[
-        'recommonmark',
+        'docutils',
         'jsonpointer',
-        'Sphinx',
+        'recommonmark',
+        'sphinx',
+        'sphinxcontrib-opendataservices-jsonschema',
     ],
+    extras_require={
+        'test': [
+            'coveralls',
+            'flake8',
+            'isort',
+            'lxml',
+            'myst-parser',
+            'pytest',
+            'pytest-cov',
+        ],
+    },
     namespace_packages=['sphinxcontrib'],
 )

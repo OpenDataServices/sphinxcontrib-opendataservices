@@ -14,8 +14,10 @@
 # serve to show the default.
 
 import os
+
 from recommonmark.parser import CommonMarkParser
 from recommonmark.transform import AutoStructify
+
 from sphinxcontrib.opendataservices import AutoStructifyLowPriority
 
 # Add any Sphinx extension module names here, as strings. They can be
