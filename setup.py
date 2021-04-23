@@ -12,5 +12,13 @@ setup(
         'jsonpointer',
         'Sphinx',
     ],
+    extras_require={
+        'test': [
+            'coveralls',
+            'lxml',
+            'pytest',
+            'pytest-cov',
+        ],
+    },
     namespace_packages=['sphinxcontrib'],
 )
