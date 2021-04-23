@@ -1,26 +1,23 @@
-import io
-import os
-import csv
-import json
 import collections
+import csv
+import io
+import json
+import os
 from collections import OrderedDict
 
-from jsonpointer import resolve_pointer
-
 import sphinxcontrib.jsonschema
-
-from docutils.utils import SystemMessagePropagation
-from recommonmark.transform import AutoStructify
-from recommonmark.parser import CommonMarkParser
-from sphinx.directives.code import LiteralInclude
-from sphinx import addnodes
 from docutils import nodes
-from docutils.utils import new_document
-from docutils.parsers.rst import directives, Directive
-from docutils.parsers.rst.directives.tables import CSVTable
+from docutils.parsers.rst import Directive, directives
 from docutils.parsers.rst.directives.admonitions import Note
+from docutils.parsers.rst.directives.tables import CSVTable
 from docutils.parsers.rst.roles import set_classes
 from docutils.transforms import Transform
+from docutils.utils import SystemMessagePropagation, new_document
+from jsonpointer import resolve_pointer
+from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
+from sphinx import addnodes
+from sphinx.directives.code import LiteralInclude
 
 
 # Based on positive_int_list from docutils
