@@ -17,6 +17,8 @@ setup(
     extras_require={
         'test': [
             'coveralls',
+            'flake8',
+            'isort',
             'lxml',
             'pytest',
             'pytest-cov',
