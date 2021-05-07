@@ -14,14 +14,11 @@
 # serve to show the default.
 
 import os
-from recommonmark.parser import CommonMarkParser
-from recommonmark.transform import AutoStructify
-from sphinxcontrib.opendataservices import AutoStructifyLowPriority
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinxcontrib.jsonschema', 'sphinxcontrib.opendataservices']
+extensions = ['myst_parser', 'sphinxcontrib.jsonschema', 'sphinxcontrib.opendataservices']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -65,19 +62,5 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
 
-source_parsers = {
-    '.md': CommonMarkParser,
-}
-
-
 locale_dirs = ['locale/']   # path is example but recommended.
 gettext_compact = False     # optional.
-
-
-# app setup hook
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-        'enable_eval_rst': True
-    }, True)
-    app.add_transform(AutoStructify)
-    app.add_transform(AutoStructifyLowPriority)

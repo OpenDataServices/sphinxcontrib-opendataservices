@@ -1,25 +1,23 @@
-import io
-import os
-import csv
-import json
 import collections
+import csv
+import io
+import json
+import os
 from collections import OrderedDict
 
-from jsonpointer import resolve_pointer
-
 import sphinxcontrib.jsonschema
-
-from docutils.utils import SystemMessagePropagation
-from recommonmark.transform import AutoStructify
-from sphinx.directives.code import LiteralInclude
-from sphinx import addnodes
 from docutils import nodes
-from docutils.parsers.rst import directives, Directive
-from docutils.parsers.rst.directives.tables import CSVTable
+from docutils.parsers.rst import Directive, directives
 from docutils.parsers.rst.directives.admonitions import Note
+from docutils.parsers.rst.directives.tables import CSVTable
 from docutils.parsers.rst.roles import set_classes
 from docutils.transforms import Transform
+from docutils.utils import SystemMessagePropagation
+from jsonpointer import resolve_pointer
 from myst_parser.main import to_docutils
+from recommonmark.transform import AutoStructify
+from sphinx import addnodes
+from sphinx.directives.code import LiteralInclude
 
 
 # Based on positive_int_list from docutils
@@ -86,7 +84,7 @@ class JSONInclude(LiteralInclude):
         filename = str(self.arguments[0]).split("/")[-1].replace(".json", "")
         try:
             title = self.options['title']
-        except KeyError as e:
+        except KeyError:
             title = filename
         pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
         # Remove the items mentioned in exclude
@@ -94,7 +92,7 @@ class JSONInclude(LiteralInclude):
             for item in self.options['exclude'].split(","):
                 try:
                     del pointed[item.strip()]
-                except KeyError as e:
+                except KeyError:
                     pass
 
         if(self.options.get('include_only')):
@@ -103,7 +101,8 @@ class JSONInclude(LiteralInclude):
                     del pointed[node]
 
         code = json.dumps(pointed, indent='    ')
-        # Ideally we would add the below to a data-expand element, but I can't see how to do this, so using classes for now...
+        # Ideally we would add the below to a data-expand element, but I can't see how to do this,
+        # so using classes for now...
         class_list = self.options.get('class', [])
         class_list.append('file-' + title)
         expand = str(self.options.get("expand", "")).split(",")
@@ -115,7 +114,44 @@ class JSONInclude(LiteralInclude):
         return [container]
 
 
-class JSONIncludeFlat(CSVTable):
+class CSVTableNoTranslate(CSVTable):
+    option_spec = CSVTable.option_spec.copy()
+    option_spec['included_cols'] = nonnegative_int_list
+
+    def parse_csv_data_into_rows(self, csv_data, dialect, source):
+        rows, max_cols = super().parse_csv_data_into_rows(csv_data, dialect, source)
+        if 'included_cols' not in self.options:
+            return rows, max_cols
+
+        new_rows = []
+        for row in rows:
+            try:
+                new_rows.append([row[i] for i in self.options['included_cols']])
+            except IndexError:
+                error = self.state_machine.reporter.error(
+                    'One or more indexes of included_cols are not valid. '
+                    'The CSV data does not contain that many columns.')
+                raise SystemMessagePropagation(error)
+
+        return new_rows, len(self.options['included_cols'])
+
+    def run(self):
+        returned = super().run()
+
+        # docutils.parsers.rst.directives.tables.CSVTable.run() returns the nodes.table() node as the first node.
+        table_node = returned[0]
+
+        def is_text_element(node):
+            return isinstance(node, nodes.TextElement)
+
+        # sphinx.util.nodes.is_translatable() returns True for TextElement nodes unless node['translatable'] is False.
+        for node in table_node.traverse(is_text_element):
+            node['translatable'] = False
+
+        return returned
+
+
+class JSONIncludeFlat(CSVTableNoTranslate):
     option_spec = CSVTable.option_spec.copy()
     option_spec['jsonpointer'] = directives.unchanged
     option_spec['title'] = directives.unchanged
@@ -143,7 +179,7 @@ class JSONIncludeFlat(CSVTable):
             for item in self.options['exclude'].split(","):
                 try:
                     del pointed[item.strip()]
-                except KeyError as e:
+                except KeyError:
                     pass
         if(self.options.get('include_only')):
             for node in list(pointed):
@@ -180,32 +216,6 @@ class JSONIncludeFlat(CSVTable):
         return output.getvalue().splitlines(), abspath
 
 
-class CSVTableNoTranslate(CSVTable):
-    option_spec = CSVTable.option_spec.copy()
-    option_spec['included_cols'] = nonnegative_int_list
-
-    def parse_csv_data_into_rows(self, csv_data, dialect, source):
-        rows, max_cols = super().parse_csv_data_into_rows(csv_data, dialect, source)
-        if 'included_cols' not in self.options:
-            return rows, max_cols
-
-        new_rows = []
-        for row in rows:
-            try:
-                new_rows.append([row[i] for i in self.options['included_cols']])
-            except IndexError:
-                error = self.state_machine.reporter.error(
-                    'One or more indexes of included_cols are not valid. '
-                    'The CSV data does not contain that many columns.')
-                raise SystemMessagePropagation(error)
-
-        return new_rows, len(self.options['included_cols'])
-
-    def get_csv_data(self):
-        lines, source = super().get_csv_data()
-        return lines, None
-
-
 class DirectoryListDirective(Directive):
     option_spec = {
         'path': directives.unchanged,
@@ -216,14 +226,14 @@ class DirectoryListDirective(Directive):
         bl = nodes.bullet_list()
         for fname in os.listdir(self.options.get('path')):
             bl += nodes.list_item('', nodes.paragraph('', '', nodes.reference('', '',
-                nodes.Text(fname),
-                internal=False,
-                refuri=self.options.get('url') + fname, anchorname='')))
+                                  nodes.Text(fname),
+                                  internal=False,
+                                  refuri=self.options.get('url') + fname, anchorname='')))
         return [bl]
 
 
 def parse_markdown(text):
-        return to_docutils(text).children[:]
+    return to_docutils(text).children[:]
 
 
 class MarkdownDirective(Directive):
@@ -274,12 +284,13 @@ class JSONSchemaTitlesDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
                 raise KeyError
         else:
             return [self.table(schema)]
-    
+
     def row(self, prop, tbody):
         # Don't display rows for objects and arrays of objects (only their children)
-        if (isinstance(prop, sphinxcontrib.jsonschema.Object) or
-            (isinstance(prop, sphinxcontrib.jsonschema.Array) and
-                prop.items.get('type') == 'object')):
+        if (
+            isinstance(prop, sphinxcontrib.jsonschema.Object)
+            or (isinstance(prop, sphinxcontrib.jsonschema.Array) and prop.items.get('type') == 'object')
+        ):
             return
         if not prop.rollup and prop.parent.parent.name != self.options.get('child'):
             return
@@ -294,7 +305,7 @@ class JSONSchemaTitlesDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
 class JSONSchemaTitleFieldnameMapDirective(sphinxcontrib.jsonschema.JSONSchemaDirective):
     headers = ['Title', 'Name', 'Type']
     widths = [1, 1, 1]
-    
+
     def row(self, prop, tbody):
         # Don't display rows for objects and arrays of objects (only their children)
         if (isinstance(prop, sphinxcontrib.jsonschema.Object) or
@@ -360,8 +371,8 @@ class LocalizationNote(Note):
         admonition_node = note(text, **self.options)
         self.add_name(admonition_node)
         admonition_node.source, admonition_node.line = self.state.state_machine.get_source_and_line()
-        #self.state.nested_parse(self.content, self.content_offset,
-        #                        admonition_node)
+        # self.state.nested_parse(self.content, self.content_offset,
+        #                         admonition_node)
         admonition_node.children = parse_markdown(text)
         return [admonition_node]
 
