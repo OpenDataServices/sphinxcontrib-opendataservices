@@ -10,6 +10,7 @@ setup(
     install_requires=[
         'docutils',
         'jsonpointer',
+        'myst-parser',
         'recommonmark',
         'sphinx',
         'sphinxcontrib-opendataservices-jsonschema',
