@@ -1,6 +1,6 @@
 # Misc Directives
 
-`````eval_rst
+`````{eval-rst}
 
 .. rst:directive:: csv-table-no-translate
 
@@ -21,7 +21,7 @@
 
         .. literal-and-parsed-markdown::
 
-            ```eval_rst
+            ```{eval-rst}
             .. markdown::
 
                 Some markdown [a URL](http://example.org), `single backtick literals`. 
@@ -32,7 +32,7 @@
 
         .. literal-and-parsed-markdown::
 
-            ```eval_rst
+            ```{eval-rst}
             .. admonition:: Worked example
                 :class: hint
 
@@ -53,7 +53,7 @@
 
         .. literal-and-parsed-markdown::
 
-            ```eval_rst
+            ```{eval-rst}
             .. directory_list::
                 :path: exampledir
                 :url: https://github.com/OpenDataServices/sphinxcontrib-opendataservices/blob/master/docs/exampledir/
@@ -63,7 +63,7 @@
    
    Create a note admonition that only will appear in languages that have "translated" it. This will not appear in the base language (normally English). If a translator wants to mark they have seen the message but do not want to add a note then they can leave a single hyphen '-'. The contents of the translation will be treated as markdown. The text within the directive should contain information useful for the translator and instruct what to do when they encouter this. For example::
 
-    ```eval_rst
+    ```{eval-rst}
     .. localization-note:: 
 
       DO NOT TRANSLATE THIS MESSAGE DIRECTLY

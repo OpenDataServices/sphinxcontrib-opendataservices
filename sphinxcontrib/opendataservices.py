@@ -12,7 +12,7 @@ from docutils.parsers.rst.directives.admonitions import Note
 from docutils.parsers.rst.directives.tables import CSVTable
 from docutils.parsers.rst.roles import set_classes
 from docutils.transforms import Transform
-from docutils.utils import SystemMessagePropagation
+from docutils.utils import SystemMessagePropagation, new_document
 from jsonpointer import resolve_pointer
 from myst_parser.main import to_docutils
 from recommonmark.transform import AutoStructify
@@ -232,8 +232,10 @@ class DirectoryListDirective(Directive):
         return [bl]
 
 
-def parse_markdown(text):
-    return to_docutils(text).children[:]
+def parse_markdown(text, document=None):
+    if document:
+        document = new_document(None, document.settings)
+    return to_docutils(text, document=document).children[:]
 
 
 class MarkdownDirective(Directive):
@@ -241,7 +243,7 @@ class MarkdownDirective(Directive):
 
     def run(self):
         text = '\n'.join(self.content)
-        return parse_markdown(text)
+        return parse_markdown(text, document=self.state.document)
 
 
 class LiteralAndParsedMarkdownDirective(Directive):
@@ -253,7 +255,7 @@ class LiteralAndParsedMarkdownDirective(Directive):
             nodes.paragraph('', '', nodes.Text('Source:')),
             nodes.literal_block(text, text),
             nodes.paragraph('', '', nodes.Text('Output:')),
-        ] + parse_markdown(text)
+        ] + parse_markdown(text, document=self.state.document)
 
 
 def type_format_simple(prop):
