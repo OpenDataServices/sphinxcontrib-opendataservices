@@ -15,7 +15,6 @@ from docutils.transforms import Transform
 from docutils.utils import SystemMessagePropagation, new_document
 from jsonpointer import resolve_pointer
 from myst_parser.main import to_docutils
-from recommonmark.transform import AutoStructify
 from sphinx import addnodes
 from sphinx.directives.code import LiteralInclude
 
@@ -34,14 +33,6 @@ def nonnegative_int_list(argument):
     else:
         entries = argument.split()
     return [directives.nonnegative_int(entry) for entry in entries]
-
-
-class AutoStructifyLowPriority(AutoStructify):
-    """
-    We need this low priority copy of AutoStructify to apply some transforms
-    after translations.
-    """
-    default_priority = 1000
 
 
 def flatten_dict(obj, path, result, recursive=False):
