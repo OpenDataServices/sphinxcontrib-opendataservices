@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sphinxcontrib-opendataservices',
-    version='0.1.0',
+    version='0.1.1',
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     packages=['sphinxcontrib'],
@@ -21,7 +21,6 @@ setup(
             'flake8',
             'isort',
             'lxml',
-            'myst-parser',
             'pytest',
             'pytest-cov',
         ],

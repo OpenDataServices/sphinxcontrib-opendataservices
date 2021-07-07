@@ -1,6 +1,6 @@
 # JSON Schema Directives
 
-`````eval_rst
+`````{eval-rst}
 
 .. rst:directive:: jsonschema
         
@@ -14,7 +14,7 @@
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsonschema:: _static/example_schema.json
             ```
 
@@ -26,13 +26,13 @@
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsonschema-titles:: _static/example_schema.json
             ```
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsonschema-titles:: _static/example_schema.json
                 :child: subthings
             ```
@@ -45,7 +45,7 @@
   
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsonschema-title-fieldname-map:: _static/example_schema.json
             ```
 
@@ -58,7 +58,7 @@
   
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsonschema-array:: _static/example_schema_array.json
             ```
 

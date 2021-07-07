@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.1.1] - 2021-05-18
+
+### Fixed
+
+- Fix the markdown directive, so it doesn't fail on anything that required sphinx (and not just docutils) formatting.
+
 ## [0.1.0] - 2021-05-11
 
 First release of project (was previously included by pip installing from a git commit).

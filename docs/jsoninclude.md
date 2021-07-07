@@ -2,7 +2,7 @@
 
 ## Standard JSON Include
 
-`````eval_rst
+`````{eval-rst}
 
 .. rst:directive:: jsoninclude
 
@@ -16,7 +16,7 @@
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsoninclude:: _static/example.json
                 :jsonpointer: /a/0/b
                 :expand: e
@@ -28,7 +28,7 @@
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsoninclude:: _static/example.json
                 :jsonpointer: /a/0/b
                 :exclude: e,g
@@ -38,7 +38,7 @@
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsoninclude:: _static/example.json
                 :jsonpointer: /a/0/b
                 :include_only: e,g
@@ -65,11 +65,11 @@ You need to add the files to a `_static` folder within your docs, and then add t
 
 The option `expand` can be used to control which lists are expanded initially. The option `title` can be used to give the json include a title; only one of consecutive includes will be shown, with a select box to switch:
 
-`````eval_rst
+`````{eval-rst}
 
 .. literal-and-parsed-markdown::
 
-    ```eval_rst
+    ```{eval-rst}
     .. jsoninclude:: _static/example.json
         :jsonpointer: 
         :title: collapsed
@@ -84,7 +84,7 @@ The option `expand` can be used to control which lists are expanded initially. T
 
 ## Flat JSON Include
 
-`````eval_rst
+`````{eval-rst}
 
 .. rst:directive:: jsoninclude-flat
 
@@ -98,7 +98,7 @@ The option `expand` can be used to control which lists are expanded initially. T
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsoninclude-flat:: _static/example.json
                 :jsonpointer: /a/0/b
             ```
@@ -107,7 +107,7 @@ The option `expand` can be used to control which lists are expanded initially. T
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsoninclude-flat:: _static/example.json
                 :jsonpointer: /a/0/b
                 :recursive:
@@ -117,7 +117,7 @@ The option `expand` can be used to control which lists are expanded initially. T
 
         .. literal-and-parsed-markdown::
 
-            ```eval_rst
+            ```{eval-rst}
             .. jsoninclude-flat:: _static/example.json
                 :jsonpointer: /h
             ```
@@ -126,7 +126,7 @@ The option `expand` can be used to control which lists are expanded initially. T
 
         .. literal-and-parsed-markdown::
             
-            ```eval_rst
+            ```{eval-rst}
             .. jsoninclude-flat:: _static/example.json
                 :jsonpointer: /a/0/b
                 :ignore_path: /a/0/b/
