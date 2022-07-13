@@ -25,4 +25,7 @@ setup(
         ],
     },
     namespace_packages=['sphinxcontrib'],
+    classifiers=[
+        'License :: OSI Approved :: MIT License'
+    ],
 )
