@@ -14,9 +14,24 @@ from docutils.parsers.rst.roles import set_classes
 from docutils.transforms import Transform
 from docutils.utils import SystemMessagePropagation, new_document
 from jsonpointer import resolve_pointer
-from myst_parser.main import to_docutils
 from sphinx import addnodes
 from sphinx.directives.code import LiteralInclude
+
+
+try:
+    from myst_parser.main import to_docutils
+except ModuleNotFoundError:
+    from myst_parser.config.main import MdParserConfig
+    from myst_parser.mdit_to_docutils.base import make_document
+    from myst_parser.mdit_to_docutils.sphinx_ import SphinxRenderer
+    from myst_parser.parsers.mdit import create_md_parser
+
+    # to_docutils was removed in myst-parser>=0.18.
+    def to_docutils(text):
+        # Code is similar to MystParser.parse and myst_parser.parsers.docutils_.Parser.parse.
+        parser = create_md_parser(MdParserConfig(), SphinxRenderer)
+        parser.options["document"] = make_document()
+        return parser.render(text)
 
 
 # Based on positive_int_list from docutils

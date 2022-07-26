@@ -7,11 +7,17 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        python-version: [3.6, 3.7, 3.8, 3.9, '3.10']
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10']
+        myst-parser-version: [ '<0.18.0', '>=0.18.0' ]
         exclude:
-          # Macos doesn't have 3.6 any more
-          - python-version: 3.6
-            os: macos-latest
+          # myst-parser 0.18.0 dropped support for Python 3.6
+          - python-version: '3.6'
+            myst-parser-version: '>=0.18.0'
+          # GitHub Actions dropped support for Python 3.6 on macos and windows
+          - os: macos-latest
+            python-version: '3.6'
+          - os: windows-latest
+            python-version: '3.6'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
@@ -27,6 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       - run: pip install .[test]
+      - run: pip install "myst-parser${{ matrix.myst-parser-version }}"
       - run: pytest -vv --cov sphinxcontrib
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

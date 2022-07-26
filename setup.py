@@ -12,7 +12,7 @@ setup(
         'jsonpointer',
         'myst-parser',
         'sphinx',
-        'sphinxcontrib-opendataservices-jsonschema',
+        'sphinxcontrib-opendataservices-jsonschema>=0.5.0',
     ],
     extras_require={
         'test': [
