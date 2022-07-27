@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.0] - 2022-07-26
+
+### Added
+
+- Add myst-parser 0.18.0 support
+
 ## [0.2.0] - 2021-07-07
 
 ### Removed

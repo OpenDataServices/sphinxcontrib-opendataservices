@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sphinxcontrib-opendataservices',
-    version='0.2.0',
+    version='0.3.0',
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     packages=['sphinxcontrib'],
@@ -12,7 +12,7 @@ setup(
         'jsonpointer',
         'myst-parser',
         'sphinx',
-        'sphinxcontrib-opendataservices-jsonschema',
+        'sphinxcontrib-opendataservices-jsonschema>=0.5.0',
     ],
     extras_require={
         'test': [
@@ -25,4 +25,7 @@ setup(
         ],
     },
     namespace_packages=['sphinxcontrib'],
+    classifiers=[
+        'License :: OSI Approved :: MIT License'
+    ],
 )
