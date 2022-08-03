@@ -27,10 +27,12 @@ except ModuleNotFoundError:
     from myst_parser.parsers.mdit import create_md_parser
 
     # to_docutils was removed in myst-parser>=0.18.
-    def to_docutils(text):
+    def to_docutils(text, document=None):
         # Code is similar to MystParser.parse and myst_parser.parsers.docutils_.Parser.parse.
         parser = create_md_parser(MdParserConfig(), SphinxRenderer)
-        parser.options["document"] = make_document()
+        if not document:
+            document = make_document()
+        parser.options["document"] = document
         return parser.render(text)
 
 

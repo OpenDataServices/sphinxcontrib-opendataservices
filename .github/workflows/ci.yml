@@ -34,7 +34,11 @@ jobs:
             ${{ runner.os }}-pip-
       - run: pip install .[test]
       - run: pip install "myst-parser${{ matrix.myst-parser-version }}"
+      # Run pytest
       - run: pytest -vv --cov sphinxcontrib
+      # Also try building the docs in the docs directory
+      - run: pip install sphinx_rtd_theme
+      - run: cd docs && make dirhtml
       - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: coveralls --service=github
