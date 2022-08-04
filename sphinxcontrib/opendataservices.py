@@ -27,10 +27,12 @@ except ModuleNotFoundError:
     from myst_parser.parsers.mdit import create_md_parser
 
     # to_docutils was removed in myst-parser>=0.18.
-    def to_docutils(text):
+    def to_docutils(text, document=None):
         # Code is similar to MystParser.parse and myst_parser.parsers.docutils_.Parser.parse.
         parser = create_md_parser(MdParserConfig(), SphinxRenderer)
-        parser.options["document"] = make_document()
+        if not document:
+            document = make_document()
+        parser.options["document"] = document
         return parser.render(text)
 
 
@@ -94,14 +96,14 @@ class JSONInclude(LiteralInclude):
             title = filename
         pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
         # Remove the items mentioned in exclude
-        if(self.options.get('exclude')):
+        if self.options.get('exclude'):
             for item in self.options['exclude'].split(","):
                 try:
                     del pointed[item.strip()]
                 except KeyError:
                     pass
 
-        if(self.options.get('include_only')):
+        if self.options.get('include_only'):
             for node in list(pointed):
                 if not (node in self.options.get('include_only')):
                     del pointed[node]
@@ -181,13 +183,13 @@ class JSONIncludeFlat(CSVTableNoTranslate):
         with open(abspath) as fp:
             json_obj = json.load(fp, object_pairs_hook=OrderedDict)
         pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
-        if(self.options.get('exclude')):
+        if self.options.get('exclude'):
             for item in self.options['exclude'].split(","):
                 try:
                     del pointed[item.strip()]
                 except KeyError:
                     pass
-        if(self.options.get('include_only')):
+        if self.options.get('include_only'):
             for node in list(pointed):
                 if not (node in self.options.get('include_only')):
                     del pointed[node]
