@@ -78,7 +78,7 @@ class JSONInclude(LiteralInclude):
         'title': directives.unchanged,
     }
 
-    def run(self):
+    def get_filename_and_pointed(self):
         env = self.state.document.settings.env
         dirname = os.path.dirname(env.doc2path(env.docname, base=None))
         relpath = os.path.join(dirname, self.arguments[0])
@@ -90,11 +90,17 @@ class JSONInclude(LiteralInclude):
         with open(abspath) as fp:
             json_obj = json.load(fp, object_pairs_hook=OrderedDict)
         filename = str(self.arguments[0]).split("/")[-1].replace(".json", "")
+        pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
+        return filename, pointed
+
+    def run(self):
+        filename, pointed = self.get_filename_and_pointed()
+
         try:
             title = self.options['title']
         except KeyError:
             title = filename
-        pointed = resolve_pointer(json_obj, self.options['jsonpointer'])
+
         # Remove the items mentioned in exclude
         if self.options.get('exclude'):
             for item in self.options['exclude'].split(","):
@@ -120,6 +126,14 @@ class JSONInclude(LiteralInclude):
         container = nodes.container(classes=class_list)
         container += literal
         return [container]
+
+
+class JSONIncludeQuote(JSONInclude):
+    def run(self):
+        filename, pointed = self.get_filename_and_pointed()
+        block_quote = nodes.block_quote('')
+        block_quote += nodes.paragraph(pointed, pointed)
+        return [block_quote]
 
 
 class CSVTableNoTranslate(CSVTable):
@@ -415,6 +429,7 @@ def setup(app):
     app.add_directive('directory_list', DirectoryListDirective)
     app.add_directive('jsoninclude', JSONInclude)
     app.add_directive('jsoninclude-flat', JSONIncludeFlat)
+    app.add_directive('jsoninclude-quote', JSONIncludeQuote)
     app.add_directive('markdown', MarkdownDirective)
     app.add_directive('literal-and-parsed-markdown', LiteralAndParsedMarkdownDirective)
     app.add_directive('jsonschema-titles', JSONSchemaTitlesDirective)

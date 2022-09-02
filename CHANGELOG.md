@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Add `jsoninclude-quote` directive
+
 ## [0.3.1] - 2022-08-03
 
 - Fix markdown related directives to work with myst-parser 0.18.0
