@@ -77,3 +77,8 @@ def test_jsoninclude_flat_gettext(app, status, warning):
 @pytest.mark.sphinx(buildername='gettext', srcdir=path('jsoninclude-flat-md'), freshenv=True)
 def test_jsoninclude_flat_gettext_myst(app, status, warning):
     assert_build(app, status, warning, 'jsoninclude-flat-md', buildername='gettext')
+
+
+@pytest.mark.sphinx(buildername='html', srcdir=path('jsoninclude-quote'), freshenv=True)
+def test_jsoninclude_quote_html(app, status, warning):
+    assert_build(app, status, warning, 'jsoninclude-quote')

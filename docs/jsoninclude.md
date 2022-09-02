@@ -136,3 +136,27 @@ The option `expand` can be used to control which lists are expanded initially. T
     same as for ``jsoninclude`` (see above).
 
 `````
+
+
+## JSON Include Quoted
+
+`````{eval-rst}
+
+.. rst:directive:: jsoninclude-quote
+
+    .. markdown::
+
+        Include a value from a JSON file, inside a blockquote, given a [jsonpointer](https://tools.ietf.org/html/rfc6901).
+
+        e.g. using [this json file](_static/example_schema.json):
+
+    ..
+
+        .. literal-and-parsed-markdown::
+
+            ```{eval-rst}
+            .. jsoninclude-quote:: _static/example_schema.json
+                :jsonpointer: /properties/lorem/description
+            ```
+
+`````
