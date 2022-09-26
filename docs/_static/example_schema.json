@@ -19,7 +19,7 @@
         },
         "lorem": {
             "title": "Lorem ipsum",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porttitor urna in diam ornare luctus. Donec accumsan sit amet velit id auctor. Sed commodo elit ut tempor suscipit. Fusce volutpat malesuada felis, accumsan molestie nisi aliquet non. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porttitor urna in diam ornare luctus. Donec accumsan sit amet velit id auctor. Sed commodo elit ut tempor suscipit. Fusce volutpat malesuada felis, accumsan molestie nisi aliquet non. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. *Some* [markdown](http://example.org).",
             "type": "string"
         },
         "subthings": {

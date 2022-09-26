@@ -132,7 +132,7 @@ class JSONIncludeQuote(JSONInclude):
     def run(self):
         filename, pointed = self.get_filename_and_pointed()
         block_quote = nodes.block_quote('')
-        block_quote += nodes.paragraph(pointed, pointed)
+        block_quote += parse_markdown(pointed, document=self.state.document)
         return [block_quote]
 
 

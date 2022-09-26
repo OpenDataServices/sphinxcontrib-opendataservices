@@ -1,5 +1,5 @@
 {
     "a": [{
-        "b": "Some text"
+        "b": "Some text *some* [markdown](http://example.org)"
     }]
 }
