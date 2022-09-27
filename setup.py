@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sphinxcontrib-opendataservices',
-    version='0.4.0',
+    version='0.5.0',
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     packages=['sphinxcontrib'],
