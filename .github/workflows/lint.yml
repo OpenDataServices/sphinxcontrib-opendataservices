@@ -3,7 +3,8 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    # Need to use an older Ubuntu so Python 3.6 is available
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - name: Setup python
