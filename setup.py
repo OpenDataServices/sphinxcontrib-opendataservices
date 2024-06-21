@@ -2,17 +2,14 @@ from setuptools import setup
 
 setup(
     name='sphinxcontrib-opendataservices',
-    version='0.5.0',
+    version='0.6.0',
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     packages=['sphinxcontrib'],
     url='https://github.com/OpenDataServices/sphinxcontrib-opendataservices',
     install_requires=[
         'docutils',
-        'jsonpointer',
-        'myst-parser',
         'sphinx',
-        'sphinxcontrib-opendataservices-jsonschema>=0.5.0',
     ],
     extras_require={
         'test': [
@@ -23,6 +20,13 @@ setup(
             'pytest',
             'pytest-cov',
         ],
+        'markdown': [
+            'myst-parser',
+        ],
+        'json': [
+            'jsonpointer',
+            'sphinxcontrib-opendataservices-jsonschema>=0.5.0',
+        ]
     },
     namespace_packages=['sphinxcontrib'],
     classifiers=[
