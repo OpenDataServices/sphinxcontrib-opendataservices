@@ -3,35 +3,25 @@ on: [push, pull_request]
 jobs:
   build:
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Need to use an older Ubuntu so Python 3.6 is available
-        os: [macos-latest, windows-latest, ubuntu-20.04]
-        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10']
-        myst-parser-version: [ '<0.18.0', '>=0.18.0' ]
+        python-version: [ '3.9', '3.10', '3.11', '3.12', '3.13']
+        myst-parser-version: [ '>=0.18.0,<1', '>=1,<2', '>=2,<3', '>=3,<4', '>=4,<5' ]
         exclude:
-          # myst-parser 0.18.0 dropped support for Python 3.6
-          - python-version: '3.6'
-            myst-parser-version: '>=0.18.0'
-          # GitHub Actions dropped support for Python 3.6 on macos and windows
-          - os: macos-latest
-            python-version: '3.6'
-          - os: windows-latest
-            python-version: '3.6'
+          # myst-parser 4 dropped support for Python 3.9
+          - python-version: '3.9'
+            myst-parser-version: '>=4,<5'
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
       - run: pip install .[test]
       - run: pip install "myst-parser${{ matrix.myst-parser-version }}"
       # Run pytest
-      - run: pytest -vv --cov sphinxcontrib
+      - run: pytest -vv tests
       # Also try building the docs in the docs directory
       - run: pip install sphinx_rtd_theme
       - run: cd docs && make dirhtml
-      - env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls --service=github

@@ -18,22 +18,20 @@ from sphinx import addnodes
 from sphinx.directives.code import LiteralInclude
 
 
-try:
-    from myst_parser.main import to_docutils
-except ModuleNotFoundError:
-    from myst_parser.config.main import MdParserConfig
-    from myst_parser.mdit_to_docutils.base import make_document
-    from myst_parser.mdit_to_docutils.sphinx_ import SphinxRenderer
-    from myst_parser.parsers.mdit import create_md_parser
+from myst_parser.config.main import MdParserConfig
+from myst_parser.mdit_to_docutils.base import make_document
+from myst_parser.mdit_to_docutils.sphinx_ import SphinxRenderer
+from myst_parser.parsers.mdit import create_md_parser
 
-    # to_docutils was removed in myst-parser>=0.18.
-    def to_docutils(text, document=None):
-        # Code is similar to MystParser.parse and myst_parser.parsers.docutils_.Parser.parse.
-        parser = create_md_parser(MdParserConfig(), SphinxRenderer)
-        if not document:
-            document = make_document()
-        parser.options["document"] = document
-        return parser.render(text)
+
+# to_docutils was removed in myst-parser>=0.18 so we recreate it here.
+def to_docutils(text, document=None):
+    # Code is similar to MystParser.parse and myst_parser.parsers.docutils_.Parser.parse.
+    parser = create_md_parser(MdParserConfig(), SphinxRenderer)
+    if not document:
+        document = make_document()
+    parser.options["document"] = document
+    return parser.render(text)
 
 
 # Based on positive_int_list from docutils

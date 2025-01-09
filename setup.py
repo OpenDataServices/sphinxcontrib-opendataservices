@@ -7,10 +7,11 @@ setup(
     author_email='code@opendataservices.coop',
     packages=['sphinxcontrib'],
     url='https://github.com/OpenDataServices/sphinxcontrib-opendataservices',
+    python_requires=">=3.9.0",
     install_requires=[
         'docutils',
         'jsonpointer',
-        'myst-parser',
+        'myst-parser>=0.18.0',
         'sphinx',
         'sphinxcontrib-opendataservices-jsonschema>=0.5.0',
     ],

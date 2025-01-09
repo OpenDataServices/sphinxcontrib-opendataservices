@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Dropped support for Python 3.8 and lower, as these are end of life
+- Dropped support for myst-parser<0.18 as that uses an version of Sphinx so old it causes issues
+- Only test on Linux, as standard for Open Data Services libraries
+
 ## [0.5.0] - 2022-09-26
 
 ### Changed
