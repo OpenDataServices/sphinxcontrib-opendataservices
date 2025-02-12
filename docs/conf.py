@@ -13,7 +13,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import os
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -51,16 +50,8 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'OCDSdoc'
 
-
-# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-# otherwise, readthedocs.org uses their theme by default, so no need to specify it
-
+# The theme to use for HTML and HTML Help pages.
+html_theme = "odsc_default_sphinx_theme"
 
 locale_dirs = ['locale/']   # path is example but recommended.
 gettext_compact = False     # optional.
