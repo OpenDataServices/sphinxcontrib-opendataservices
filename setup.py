@@ -24,6 +24,10 @@ setup(
             'pytest',
             'pytest-cov',
         ],
+        'docs': [
+            'sphinx',
+            'odsc-default-sphinx-theme',
+        ]
     },
     namespace_packages=['sphinxcontrib'],
     classifiers=[
