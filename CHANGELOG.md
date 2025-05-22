@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.6.0] - 2025-05-27
+
 ### Fixed
 
 - The `csv-table-no-translate` directive correctly renders the inner text of cross-references to other documents when using MyST-Parser for Markdown files
