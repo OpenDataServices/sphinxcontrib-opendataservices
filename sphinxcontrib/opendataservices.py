@@ -15,6 +15,7 @@ from docutils.transforms import Transform
 from docutils.utils import SystemMessagePropagation, new_document
 from jsonpointer import resolve_pointer
 from sphinx import addnodes
+from sphinx.builders.gettext import MessageCatalogBuilder
 from sphinx.directives.code import LiteralInclude
 
 
@@ -158,15 +159,16 @@ class CSVTableNoTranslate(CSVTable):
     def run(self):
         returned = super().run()
 
-        # docutils.parsers.rst.directives.tables.CSVTable.run() returns the nodes.table() node as the first node.
-        table_node = returned[0]
+        if isinstance(self.state.document.settings.env.app.builder, MessageCatalogBuilder):
+            # docutils.parsers.rst.directives.tables.CSVTable.run() returns the nodes.table() node as the first node.
+            table_node = returned[0]
 
-        def is_text_element(node):
-            return isinstance(node, nodes.TextElement)
+            def is_text_element(node):
+                return isinstance(node, nodes.TextElement)
 
-        # sphinx.util.nodes.is_translatable() returns True for TextElement nodes unless node['translatable'] is False.
-        for node in table_node.traverse(is_text_element):
-            node['translatable'] = False
+            # sphinx.util.nodes.is_translatable() returns True for TextElement unless node['translatable'] is False.
+            for node in table_node.traverse(is_text_element):
+                node['translatable'] = False
 
         return returned
 
@@ -406,7 +408,6 @@ class RemoveLocalizationNote(Transform):
     default_priority = 21
 
     def apply(self):
-        from sphinx.builders.gettext import MessageCatalogBuilder
         env = self.document.settings.env
         builder = env.app.builder
         if isinstance(builder, MessageCatalogBuilder):
