@@ -404,7 +404,7 @@ class note(nodes.note, addnodes.translatable):
         if translated_message.strip() == '-':
             self.attributes['ignore-note'] = True
         else:
-            self.children = parse_markdown(translated_message)
+            self.children = parse_markdown(translated_message, document=self.document)
 
     def extract_original_messages(self):
         return [self['original_text']]
@@ -422,7 +422,7 @@ class LocalizationNote(Note):
         admonition_node.source, admonition_node.line = self.state.state_machine.get_source_and_line()
         # self.state.nested_parse(self.content, self.content_offset,
         #                         admonition_node)
-        admonition_node.children = parse_markdown(text)
+        admonition_node.children = parse_markdown(text, document=self.state.document)
         return [admonition_node]
 
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Avoid deprecation warnings from Sphinx 9 (`BuildEnvironment.app`) and docutils (`Node.traverse()`, `set_classes()`)
+- The `localization-note` directive no longer errors with myst-parser 2 or later (`'SphinxRenderer' object has no attribute 'sphinx_env'`)
 
 ## [0.6.0] - 2025-05-27
 
