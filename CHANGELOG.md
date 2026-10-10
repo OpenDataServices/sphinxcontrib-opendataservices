@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Avoid deprecation warnings from Sphinx 9 (`BuildEnvironment.app`) and docutils (`Node.traverse()`, `set_classes()`)
+
 ## [0.6.0] - 2025-05-27
 
 ### Fixed
