@@ -10,7 +10,6 @@ from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 from docutils.parsers.rst.directives.admonitions import Note
 from docutils.parsers.rst.directives.tables import CSVTable
-from docutils.parsers.rst.roles import set_classes
 from docutils.transforms import Transform
 from docutils.utils import SystemMessagePropagation, new_document
 from jsonpointer import resolve_pointer
@@ -18,11 +17,21 @@ from sphinx import addnodes
 from sphinx.builders.gettext import MessageCatalogBuilder
 from sphinx.directives.code import LiteralInclude
 
-
 from myst_parser.config.main import MdParserConfig
 from myst_parser.mdit_to_docutils.base import make_document
 from myst_parser.mdit_to_docutils.sphinx_ import SphinxRenderer
 from myst_parser.parsers.mdit import create_md_parser
+
+
+try:
+    from docutils.parsers.rst.roles import normalize_options
+except ImportError:  # docutils < 0.22
+    from docutils.parsers.rst.roles import set_classes
+
+    def normalize_options(options):
+        options = dict(options)
+        set_classes(options)
+        return options
 
 
 # to_docutils was removed in myst-parser>=0.18 so we recreate it here.
@@ -135,6 +144,22 @@ class JSONIncludeQuote(JSONInclude):
         return [block_quote]
 
 
+def _findall(node, condition):
+    # Node.findall() was added in docutils 0.18.1. Node.traverse() is obsolete.
+    if hasattr(node, 'findall'):
+        return node.findall(condition)
+    return node.traverse(condition)
+
+
+def _is_message_catalog_builder(env):
+    return getattr(env, 'opendataservices_message_catalog_builder', False)
+
+
+def _record_builder(app):
+    # BuildEnvironment.app is deprecated in Sphinx 9, so record the builder's type while the app is available.
+    app.env.opendataservices_message_catalog_builder = isinstance(app.builder, MessageCatalogBuilder)
+
+
 class CSVTableNoTranslate(CSVTable):
     option_spec = CSVTable.option_spec.copy()
     option_spec['included_cols'] = nonnegative_int_list
@@ -159,7 +184,7 @@ class CSVTableNoTranslate(CSVTable):
     def run(self):
         returned = super().run()
 
-        if isinstance(self.state.document.settings.env.app.builder, MessageCatalogBuilder):
+        if _is_message_catalog_builder(self.state.document.settings.env):
             # docutils.parsers.rst.directives.tables.CSVTable.run() returns the nodes.table() node as the first node.
             table_node = returned[0]
 
@@ -167,7 +192,7 @@ class CSVTableNoTranslate(CSVTable):
                 return isinstance(node, nodes.TextElement)
 
             # sphinx.util.nodes.is_translatable() returns True for TextElement unless node['translatable'] is False.
-            for node in table_node.traverse(is_text_element):
+            for node in _findall(table_node, is_text_element):
                 node['translatable'] = False
 
         return returned
@@ -379,7 +404,7 @@ class note(nodes.note, addnodes.translatable):
         if translated_message.strip() == '-':
             self.attributes['ignore-note'] = True
         else:
-            self.children = parse_markdown(translated_message)
+            self.children = parse_markdown(translated_message, document=self.document)
 
     def extract_original_messages(self):
         return [self['original_text']]
@@ -388,7 +413,7 @@ class note(nodes.note, addnodes.translatable):
 class LocalizationNote(Note):
 
     def run(self):
-        set_classes(self.options)
+        self.options = normalize_options(self.options)
         self.assert_has_content()
         text = '\n'.join(self.content)
         self.options['localization_note'] = True
@@ -397,7 +422,7 @@ class LocalizationNote(Note):
         admonition_node.source, admonition_node.line = self.state.state_machine.get_source_and_line()
         # self.state.nested_parse(self.content, self.content_offset,
         #                         admonition_node)
-        admonition_node.children = parse_markdown(text)
+        admonition_node.children = parse_markdown(text, document=self.state.document)
         return [admonition_node]
 
 
@@ -409,10 +434,10 @@ class RemoveLocalizationNote(Transform):
 
     def apply(self):
         env = self.document.settings.env
-        builder = env.app.builder
-        if isinstance(builder, MessageCatalogBuilder):
+        if _is_message_catalog_builder(env):
             return
-        for note in self.document.traverse(nodes.note):
+        # Copy the matches, as the loop removes nodes.
+        for note in list(_findall(self.document, nodes.note)):
             if 'localization_note' not in note.attributes:
                 continue
             if (
@@ -437,3 +462,4 @@ def setup(app):
     app.add_directive('localization-note', LocalizationNote)
 
     app.add_transform(RemoveLocalizationNote)
+    app.connect('builder-inited', _record_builder)

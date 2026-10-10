@@ -93,3 +93,26 @@ def test_jsoninclude_flat_gettext_myst(app, status, warning):
 @pytest.mark.sphinx(buildername='html', srcdir=path('jsoninclude-quote'), freshenv=True)
 def test_jsoninclude_quote_html(app, status, warning):
     assert_build(app, status, warning, 'jsoninclude-quote')
+
+
+def build_localization_note(app, warning):
+    app.build()
+    assert warning.getvalue().strip() == ''
+    with open(path('localization-note', '_build', 'html', 'index.html'), encoding='utf-8') as f:
+        return lxml.html.fromstring(f.read()).xpath('//div[contains(@class, "admonition")]')
+
+
+@pytest.mark.sphinx(buildername='html', srcdir=path('localization-note'), freshenv=True,
+                    confoverrides={'language': 'es'})
+def test_localization_note_translated(app, status, warning):
+    notes = build_localization_note(app, warning)
+
+    assert len(notes) == 1
+    assert 'custom' in notes[0].classes
+    paragraph = notes[0].xpath('p')[-1]
+    assert lxml.html.tostring(paragraph, with_tail=False).decode() == '<p>Una nota para <em>traductores</em>.</p>'
+
+
+@pytest.mark.sphinx(buildername='html', srcdir=path('localization-note'), freshenv=True)
+def test_localization_note_untranslated(app, status, warning):
+    assert build_localization_note(app, warning) == []
